@@ -46,7 +46,7 @@ pub fn Queue(comptime T: type) type {
 
 test "Queue" {
     const q = Queue(u8);
-    var que = q.init();
+    var que = q.init(std.testing.allocator);
     var i: u8 = 0;
     while (i < MAX) : (i += 1) {
         try que.enqueue(i);
