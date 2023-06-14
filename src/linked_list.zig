@@ -31,15 +31,17 @@ pub fn LinkedList(comptime T: type) type {
                 return count;
             }
         };
-        head: ?*Node = null,
+        head: ?*Node,
+        len: usize = 0,
 
         fn init() Self {
-            return .{};
+            return .{ .head = null };
         }
 
         fn append(self: *Self, new_node: *Node) void {
             new_node.next = self.head;
             self.head = new_node;
+            self.len += 1;
         }
 
         fn remove(self: *Self, node: *Node) void {
@@ -52,15 +54,16 @@ pub fn LinkedList(comptime T: type) type {
                 }
                 curr_node.next = node.next;
             }
+            self.len -= 1;
         }
 
-        fn len(self: *Self) usize {
-            if (self.head) |n| {
-                return 1 + n.count_next_nodes();
-            } else {
-                return 0;
-            }
-        }
+        // fn len(self: *Self) usize {
+        //     if (self.head) |n| {
+        //         return 1 + n.count_next_nodes();
+        //     } else {
+        //         return 0;
+        //     }
+        // }
     };
 }
 
@@ -72,6 +75,99 @@ test "Singly Linked List" {
     ll.append(&one);
     ll.append(&one);
     ll.append(&one);
-    _ = ll.print();
-    // std.debug.print("sgll: {}\n", .{ll});
+
+    std.debug.print("\n\n\n ------------------ \n\n\n {}\n", .{ll});
+}
+
+pub fn TailLinkedList(comptime T: type) type {
+    return struct {
+        const Self = @This();
+        pub const Node = struct { next: ?*Node = null, prev: ?*Node = null, data: T };
+
+        head: ?*Node,
+        tail: ?*Node,
+        len: usize = 0,
+
+        fn init() Self {
+            return .{
+                .head = null,
+                .tail = null,
+            };
+        }
+
+        fn insert_node_after(self: *Self, node: *Node, new_node: *Node) void {
+            new_node.prev = node;
+            if (node.next) |next| {
+                new_node.next = next;
+                next.prev = new_node;
+            } else {
+                new_node.next = null;
+                self.tail = new_node;
+            }
+
+            node.next = new_node;
+            self.len += 1;
+        }
+
+        fn insert_node_before(self: *Self, node: *Node, new_node: *Node) void {
+            new_node.next = node;
+            if (node.prev) |prev| {
+                new_node.prev = prev;
+                prev.next = new_node;
+            } else {
+                new_node.prev = null;
+                self.head = new_node;
+            }
+
+            node.prev = new_node;
+            self.len += 1;
+        }
+        fn append(self: *Self, new_node: *Node) void {
+            if (self.tail) |tail| {
+                self.insert_node_after(tail, new_node);
+            } else {
+                self.prepend(new_node);
+            }
+        }
+
+        fn prepend(self: *Self, new_node: *Node) void {
+            if (self.head) |head| {
+                self.insert_node_before(head, new_node);
+            } else {
+                self.head = new_node;
+                self.tail = new_node;
+                new_node.prev = null;
+                new_node.next = null;
+                self.len += 1;
+            }
+        }
+
+        fn remove(self: *Self, node: *Node) void {
+            if (node.prev) |prev| {
+                prev.next = node.next;
+            } else {
+                self.head = node.next;
+            }
+
+            if (node.next) |next| {
+                next.prev = node.prev;
+            } else {
+                self.tail = node.prev;
+            }
+
+            self.len += 1;
+        }
+    };
+}
+
+test "doubly Linked List" {
+    const lll = TailLinkedList(u8);
+    var ll = lll.init();
+    var one = lll.Node{ .data = 1 };
+    ll.append(&one);
+    ll.append(&one);
+    ll.append(&one);
+    ll.append(&one);
+
+    std.debug.print("\n\n\n ------------------ \n\n\n {}\n", .{ll});
 }
