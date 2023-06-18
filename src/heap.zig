@@ -37,7 +37,8 @@ pub fn Heap(comptime T: type) type {
 
         fn insert(self: *Self, element: T) void {
             const len = self.data.items.len;
-            if (len <= 1) {
+            std.debug.print("orgin: len:type {}", .{@TypeOf(len)});
+            if (len == 1) {
                 self.data.append(element) catch {
                     @panic(" Append data failed ");
                 };
@@ -46,14 +47,13 @@ pub fn Heap(comptime T: type) type {
                     @panic(" Append data failed ");
                 };
 
-                var i = (len / 2) - 1;
-                if (i == 0) {
-                    self.heapify(i);
-                    return;
-                } else {
-                    while (i > 0) : (i -= 1) {
-                        self.heapify(i);
-                    }
+                var i: isize = (len / 2) - 1;
+                if (i == 1) {
+                    self.heapify(@as(usize, i));
+                }
+
+                while (i > 0) : (i -= 1) {
+                    self.heapify(@as(usize, i));
                 }
             }
         }

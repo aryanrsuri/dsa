@@ -56,14 +56,6 @@ pub fn LinkedList(comptime T: type) type {
             }
             self.len -= 1;
         }
-
-        // fn len(self: *Self) usize {
-        //     if (self.head) |n| {
-        //         return 1 + n.count_next_nodes();
-        //     } else {
-        //         return 0;
-        //     }
-        // }
     };
 }
 
@@ -79,7 +71,7 @@ test "Singly Linked List" {
     std.debug.print("\n\n\n ------------------ \n\n\n {}\n", .{ll});
 }
 
-pub fn TailLinkedList(comptime T: type) type {
+pub fn DoublyLinkedList(comptime T: type) type {
     return struct {
         const Self = @This();
         pub const Node = struct { next: ?*Node = null, prev: ?*Node = null, data: T };
@@ -161,7 +153,7 @@ pub fn TailLinkedList(comptime T: type) type {
 }
 
 test "doubly Linked List" {
-    const lll = TailLinkedList(u8);
+    const lll = DoublyLinkedList(u8);
     var ll = lll.init();
     var one = lll.Node{ .data = 1 };
     ll.append(&one);
