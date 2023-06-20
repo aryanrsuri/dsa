@@ -13,9 +13,7 @@ pub fn insertion_sort(comptime T: type) type {
                         min = i;
                     }
                 }
-
                 std.mem.swap(T, &array[min], &array[i]);
-                // array[min] = array[i];
             }
         }
     };
