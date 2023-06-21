@@ -1,28 +1,30 @@
 const std = @import("std");
 
-pub fn insertion_sort(comptime T: type) type {
-    return struct {
-        array: []T = undefined,
-        fn sort(array: []T) void {
-            var i: usize = 0;
-            var min = i;
-            while (i < array.len - 1) : (i += 1) {
-                var j: usize = i + 1;
-                while (j < array.len) : (j += 1) {
-                    if (array[j] < array[min]) {
-                        min = i;
-                    }
-                }
-                std.mem.swap(T, &array[min], &array[i]);
-            }
+/// Insertion sort takes a < key  > value
+/// and assuming that key << is sorted, compares
+/// the next value and places left is less than
+/// and right if greations than
+/// N ^ 2 effeciency
+/// Arguments:
+///    array of type i64
+/// Returns:
+///    void (array is sorted in place)
+fn insertion_sort(array: []i64) void {
+    var i: usize = 1;
+    while (i < array.len) : (i += 1) {
+        var key: i64 = array[i];
+        var j: usize = i - 1;
+        std.debug.print("j : {} array.j : {}\n i: {} key : {}\n", .{ j, array[j], i, key });
+        while (j >= 0 and key < array[j]) : (j -= 1) {
+            array[j + 1] = array[j];
         }
-    };
+        array[j + 1] = key;
+    }
 }
 
-test "insertion sort" {
-    const array = insertion_sort(u64);
-    var arr = [_]u64{ 2, 5, 4, 3, 6, 7 };
-    std.debug.print("\n-----------\narr:{any}\n", .{arr});
-    array.sort(&arr);
-    std.debug.print("\n-----------\narr:{any}\n", .{arr});
+test " isert sorty" {
+    var array = [_]i64{ 2, 5, 4, 3, 6, 7 };
+    std.debug.print("\n before sort array -> {any}\n", .{array});
+    insertion_sort(&array);
+    std.debug.print("\n before sort array -> {any}\n", .{array});
 }
