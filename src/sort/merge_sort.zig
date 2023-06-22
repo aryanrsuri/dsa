@@ -10,8 +10,29 @@ const std = @import("std");
 ///    void (array is sorted in place)
 fn merge_sort(array: []i64) void {
     const med: usize = array.len / 2;
-    var front = array[0..med];
-    var back = array[med + 1 ..];
-    merge_sort(front);
-    merge_sort(back);
+    var left = array[0 .. med + 1];
+    var right = array[med..];
+    std.debug.print("left : {any} \n right : {any} \n", .{ left, right });
+    merge_sort(left);
+    merge_sort(right);
+
+    var i: usize = 0;
+    var j: usize = 0;
+    var k: usize = 0;
+    while (i < left.len and j < right.len) : (k += 1) {
+        if (left[i] < right[j]) {
+            array[k] = left[i];
+            i += 1;
+        } else {
+            array[k] = right[j];
+            j += 1;
+        }
+    }
+}
+
+test " merge sort " {
+    var array = [_]i64{ 9, 5, 1, 4, 3 };
+    std.debug.print("unsorted array : {any}\n", .{array});
+    merge_sort(&array);
+    std.debug.print("sorted array : {any}\n", .{array});
 }
