@@ -1,0 +1,15 @@
+version 0.0.01-alpha@zig
+------------------------
+Implemented binary_tree
+& Heap 
+& Linked List
+& Queue and Stack
+& Sorting algorithms 
+  Such as bubble sort
+  & Insertion sort
+  & Merge sort
+  & Quick sort and Selection sort
+Next update <0.0.02> is Graph structure
+& RB Tree
+& AVL Tree
+& Trie
