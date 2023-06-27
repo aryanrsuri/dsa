@@ -1,10 +1,12 @@
 const std = @import("std");
 
 pub fn Graph(comptime T: type) type {
+    const Map = std.AutoHashMap(T, T);
+    const MapofMaps = std.AutoHashMap(T, Map);
     return struct {
         const Self = @This();
         vertices: T,
-        edges: std.AutoHashMap(T, [][3]T),
+        edges: MapofMaps,
         allocator: std.mem.Allocator,
         directed: bool = false,
 
@@ -12,47 +14,84 @@ pub fn Graph(comptime T: type) type {
             return .{
                 .vertices = v,
                 .allocator = alloc,
-                .edges = std.AutoHashMap(T, [][3]T).init(alloc),
+                .edges = MapofMaps.init(alloc),
             };
         }
 
         fn deinit(self: *Self) void {
-            self.edges.clearAndFree();
-            self.edges.deinit();
+            var iterator = self.edges.iterator();
+            while (iterator.next()) |k_v| {
+                k_v.value_ptr.deinit();
+            }
         }
 
         fn add_vertex(self: *Self, v: T) !void {
-            var nedge = [_][3]T{[3]T{ v, undefined, 0 }};
-            _ = try self.edges.getOrPutValue(
-                v,
-                &nedge,
-            );
-            // std.debug.print("vertex added : {any} \n", .{nedge});
+            if (self.edges.contains(v)) {
+                return error.VertexExists;
+            }
+
+            var value_map = Map.init(self.allocator);
+            try self.edges.put(v, value_map);
         }
 
-        fn add_edge(self: *Self, vertex_1: T, vertex_2: T) !void {
-            try self.add_weighted_edge(vertex_1, vertex_2, 0);
+        fn add_edge(self: *Self, from: T, to: T, weight: usize) !void {
+            if (weight > 0) return;
+            const from_map = self.edges.getPtr(from) orelse
+                return error.VertexNotFound;
+            if (!self.edges.contains(to)) return error.VertexNotFound;
+            try from_map.put(to, from);
+            // iter_print(from_map);
         }
 
-        fn add_weighted_edge(self: *Self, vertex_1: T, vertex_2: T, weight: T) !void {
-            try self.add_vertex(vertex_1);
-            try self.add_vertex(vertex_2);
-            var edges = self.edges.get(vertex_1);
-            var nedge = [_]T{ vertex_1, vertex_2, weight };
-            if (edges) |edge| {
-                edge[1] = nedge;
-                std.debug.print("edge : {any} {any}\n", .{ @TypeOf(edge), nedge });
-                // try self.edges.put(vertex_1, &edge);
+        fn remove_vertex(self: *Self, v: T) void {
+            // if (self.edges.getPtr(v)) |k_v| {
+            // var iterator = k_v.iterator();
+            // var res = k_v.fetchRemove(v);
+            // std.debug.print("res : {} \n", .{res.?});
+
+            // }
+            _ = self.edges.remove(v);
+        }
+
+        fn remove_edge(self: *Self, from: T, to: T) bool {
+            if (self.edges.getPtr(from)) |k_v| {
+                iter_print(k_v);
+                return k_v.remove(to);
+            } else return false;
+        }
+
+        fn iter_print(kv: *std.hash_map.AutoHashMap(T, T)) void {
+            var iter = kv.iterator();
+            while (iter.next()) |k_v| {
+                std.debug.print("\nKEY :: {}", .{k_v.key_ptr.*});
+                std.debug.print(", VALUE :: {}\n", .{k_v.value_ptr.*});
             }
         }
     };
 }
 
-test " grpah " {
+test " graph " {
     const g = Graph(u64);
     var graph = g.init(std.testing.allocator, 2);
     defer graph.deinit();
+    _ = try graph.add_vertex(0);
     _ = try graph.add_vertex(1);
     _ = try graph.add_vertex(2);
-    _ = try graph.add_edge(1, 2);
+    _ = try graph.add_edge(0, 1, 0);
+    _ = try graph.add_edge(0, 2, 0);
+    _ = try graph.add_edge(1, 2, 0);
+    // const res = graph.remove_edge(1, 2);
+    _ = graph.remove_vertex(0);
+    // std.debug.print("\n remove edge : {} \n", .{res});
 }
+
+// var iterator = self.edges.iterator();
+// while (iterator.next()) |val| {
+//     var it = val.value_ptr.iterator();
+//     var key = val.key_ptr.*;
+//
+//     std.debug.print("\nkey ptr :{}\n", .{key});
+//     while (it.next()) |valmap| {
+//         std.debug.print("\n val_map key val:{} {}\n", .{ valmap.key_ptr.*, valmap.value_ptr.* });
+//     }
+// }

@@ -8,9 +8,8 @@ const std = @import("std");
 ///    array of type i64
 /// Returns:
 ///    void (array is sorted in place)
-fn merge_sort(array: []i64) [5]i64 {
+fn merge_sort(array: []i64) []i64 {
     var med: usize = array.len / 2;
-    std.debug.print("median , arran len {} {} \n", .{ med, array.len });
     var left = array[0 .. med + 1];
     var right = array[med..];
     left = merge_sort(left);
@@ -18,6 +17,7 @@ fn merge_sort(array: []i64) [5]i64 {
 
     return merge(array, left, right);
 }
+
 fn merge(array: []i64, left: []i64, right: []i64) []i64 {
     var i: usize = 0;
     var j: usize = 0;
@@ -38,8 +38,8 @@ fn merge(array: []i64, left: []i64, right: []i64) []i64 {
 test " merge sort " {
     // var t = [_]u64{ 1, 2, 3, 4, 5, 6 };
     // std.debug.print("array 0..3: {}\n, array 3.. : {*}\n", .{ t[0..3], t[3..] });
-    var array = [5]i64{ 9, 5, 1, 4, 3 };
+    var array = [_]i64{ 9, 5, 1, 4, 3 };
     std.debug.print("unsorted array : {any}\n", .{array});
-    array = merge_sort(&array);
-    std.debug.print("sorted array : {any}\n", .{array});
+    var res = merge_sort(&array);
+    std.debug.print("sorted array : {any}\n", .{res});
 }

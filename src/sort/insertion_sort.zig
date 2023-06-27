@@ -22,6 +22,17 @@ fn insertion_sort(array: []i64) void {
     }
 }
 
+/// In use for lenth < 32
+fn insertion_sort_opt(array: []i64) void {
+    for (array[1..], 0..) |_, i| {
+        var n = i + 1;
+        while (n > 0 and array[n] < array[n - 1]) {
+            std.mem.swap(i64, &array[n], &array[n - 1]);
+            n -= 1;
+        }
+    }
+}
+
 test " isert sorty" {
     var array = [_]i64{ 2, 5, 4, 3, 6, 7 };
     std.debug.print("\n before sort array -> {any}\n", .{array});
