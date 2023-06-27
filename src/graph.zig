@@ -1,5 +1,10 @@
 const std = @import("std");
 
+/// Graph is a data strucutre comprised
+/// of vertices and edges , which can be 
+/// connected uni or bi directional
+/// @param {comptime type} type - general Type 
+/// @returns {type} - generic Graph type
 pub fn Graph(comptime T: type) type {
     const Map = std.AutoHashMap(T, T);
     const MapofMaps = std.AutoHashMap(T, Map);
