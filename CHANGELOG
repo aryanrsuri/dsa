@@ -1,4 +1,4 @@
-version 0.0.01-alpha@zig
+version 0.0.01-alpha@f7ae742
 ------------------------
 Implemented binary_tree
 & Heap 
@@ -12,3 +12,7 @@ Next update <0.0.02> is Graph structure
 & RB Tree
 & AVL Tree
 & Trie
+
+version 0.0.02-alpha@b6a86ad
+------------------------
+Implemented Graph data structure
