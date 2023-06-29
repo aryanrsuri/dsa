@@ -13,6 +13,7 @@ Next update <0.0.02> is Graph structure
 & AVL Tree
 & Trie
 
-version 0.0.02-alpha@
+version 0.0.02-alpha@4f5f78f
 ------------------------
 Implemented Graph data structure
+& Counting sort 
