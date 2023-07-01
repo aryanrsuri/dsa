@@ -1,0 +1,13 @@
+/src/Trie.zig
+* How to insert char by char
+* How to sort by char (i.e a first or is it heavy first like ) 
+*(
+t e s t 
+    x ^ 
+
+a p p l e 
+t e s t 
+
+a p l e 
+t     ^ s t
+)
