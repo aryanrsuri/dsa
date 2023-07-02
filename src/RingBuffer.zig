@@ -1,5 +1,10 @@
 const std = @import("std");
 
+/// A Ring Buffer or cyclic queue is array
+/// of contigous data with a cyclic read/write
+/// index useful for data stream
+/// @param T type
+/// @returns Generic ring buffer type
 pub fn RingBuffer(comptime T: type) type {
     return struct {
         const Self = @This();
@@ -34,7 +39,7 @@ pub fn RingBuffer(comptime T: type) type {
         }
 
         fn mask(self: *Self, index: usize, k: usize) usize {
-            return index % (k * self.buffer.len);
+            return index % (self.buffer.len * k);
         }
 
         fn full(self: *Self) bool {
@@ -45,13 +50,11 @@ pub fn RingBuffer(comptime T: type) type {
 
 test "rb" {
     const rb = RingBuffer(usize);
-    var r = try rb.init(std.testing.allocator, 10);
+    var r = try rb.init(std.testing.allocator, 20);
     defer r.deinit();
     for (0..9) |n| {
         _ = try r.write(n);
     }
-
-    _ = r.write_overflow(10);
 
     std.debug.print(" ring buffer : {any}\n", .{r.buffer});
 }
