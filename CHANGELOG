@@ -13,7 +13,8 @@ Next update <0.0.02> is Graph structure
 & AVL Tree
 & Trie
 
-version 0.0.02-alpha@4f5f78f
+version 0.0.02-alpha@3be4ab4
 ------------------------
 Implemented Graph data structure
 & Counting sort 
+& RingBuffer
