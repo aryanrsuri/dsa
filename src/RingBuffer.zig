@@ -34,12 +34,16 @@ pub fn RingBuffer(comptime T: type) type {
         }
 
         pub fn write_overflow(self: *Self, value: T) void {
-            self.buffer[self.wrap(self.write_index, 1)] = value;
-            self.write_index = self.wrap(self.write_index + 1, 2);
+            self.buffer[self.wrap(self.write_index)] = value;
+            self.write_index = self.wrap_2(self.write_index + 1);
         }
 
-        fn wrap(self: *Self, index: usize, k: usize) usize {
-            return index % (self.buffer.len * k);
+        fn wrap(self: *Self, index: usize) usize {
+            return index % (self.buffer.len);
+        }
+
+        fn wrap_2(self: *Self, index: usize) usize {
+            return index % (self.buffer.len * 2);
         }
 
         fn full(self: *Self) bool {
