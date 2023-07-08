@@ -9,7 +9,7 @@ pub fn Queue(comptime T: type) type {
         rear: usize,
         items: [MAX]T,
 
-        fn init() Self {
+        pub fn init() Self {
             return .{
                 .front = 0,
                 .rear = 0,
@@ -17,13 +17,13 @@ pub fn Queue(comptime T: type) type {
             };
         }
 
-        fn enqueue(self: *Self, element: T) !void {
+        pub fn enqueue(self: *Self, element: T) !void {
             if (self.front == 0) self.front = 1;
             self.items[self.rear] = element;
             self.rear += 1;
         }
 
-        fn dequeue(self: *Self) ?T {
+        pub fn dequeue(self: *Self) ?T {
             const element = self.items[self.front];
             self.items[self.front] = 0;
             if (self.front == 0) return null;
@@ -37,9 +37,13 @@ pub fn Queue(comptime T: type) type {
             return element;
         }
 
-        fn peek(self: *Self) ?T {
+        pub fn peek(self: *Self) ?T {
             if (self.front == 0) return null;
             return self.items[self.front];
+        }
+
+        pub fn exists(self: *Self) bool {
+            return self.items.len == 0;
         }
     };
 }

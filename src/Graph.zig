@@ -1,4 +1,5 @@
 const std = @import("std");
+const queue = @import("Queue.zig");
 
 /// Graph is a data strucutre comprised
 /// of vertices and edges , which can be
@@ -33,8 +34,16 @@ pub fn Graph(comptime T: type, comptime D: bool) type {
             self.* = undefined;
         }
 
+        /// Breadth First Search
+        pub fn bfs(self: *Self, v: T) !void {
+            _ = self;
+            _ = v; //set
+            var q = queue.Queue(T).init();
+            while (q.exists()) {}
+        }
+
         /// Add <new> vertex
-        fn add_vertex(self: *Self, v: T) !void {
+        pub fn add_vertex(self: *Self, v: T) !void {
             if (self.edges.contains(v)) {
                 return error.VertexExists;
             }
@@ -44,7 +53,7 @@ pub fn Graph(comptime T: type, comptime D: bool) type {
         }
 
         /// Add <new> edge from vertex to vertex
-        fn add_edge(self: *Self, from: T, to: T, weight: usize) !void {
+        pub fn add_edge(self: *Self, from: T, to: T, weight: usize) !void {
             if (weight > 0) return;
             const from_map = self.edges.getPtr(from) orelse
                 return error.VertexNotFound;
