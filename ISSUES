@@ -1,6 +1,7 @@
 /src/Trie.zig
 * How to insert char by char
 * How to sort by char (i.e a first or is it heavy first like ) 
+* and the youngest child is the whole string of chars "and"
 *(
 t e s t 
     x ^ 
