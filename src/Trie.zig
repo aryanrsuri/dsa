@@ -9,6 +9,7 @@ pub fn Trie() type {
         const Self = @This();
         const Node = struct {
             bytes: [26]*u8 = undefined,
+            // next: ?*Node = null,
             word: bool = false,
         };
 
@@ -23,16 +24,21 @@ pub fn Trie() type {
             if (self.root) |root| {
                 self.allocator.destroy(root);
             }
+            self.* = undefined;
         }
 
-        fn insert(self: *Self, bytes: []const u8) !?void {}
+        fn insert(self: *Self, chars: []const u8) !?void {
+            _ = self;
+            for (chars) |byte| {
+                std.debug.print("{}\n", .{byte});
+            }
+        }
     };
 }
 test "trie" {
     const t = Trie();
     var trie = t.init(std.testing.allocator);
     defer trie.deinit();
-    // _ = try trie.insert("test");
-    // _ = try trie.insert("test");
-    std.debug.print("trie : {any}\n", .{trie});
+    _ = try trie.insert("and");
+    // std.debug.print("{any}\n", .{trie});
 }
