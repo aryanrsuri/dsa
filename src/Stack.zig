@@ -41,24 +41,53 @@ pub fn Stack(comptime T: type) type {
     };
 }
 
+pub fn Stack2(comptime T: type) type {
+    return struct {
+        const Self = @This();
+        items: std.ArrayList(T),
+
+        pub fn alloc(allocator: std.mem.Allocator) Self {
+            return .{
+                .items = std.ArrayList(T).init(allocator),
+            };
+        }
+
+        pub fn dealloc(self: *Self) void {
+            self.items.deinit();
+        }
+
+        pub fn push(self: *Self, item: T) !void {
+            try self.items.append(item);
+        }
+    };
+}
+
 test "Stack" {
-    const u8stack = Stack(u8);
-    var stack = u8stack.init(std.testing.allocator);
-    defer stack.deinit();
-    stack.print();
-    var n = stack.pop();
-    std.debug.print("\npopped element: {any}", .{n});
-    try stack.push(255);
-    try stack.push(2);
-    try stack.push(3);
-    try stack.push(3);
-    try stack.push(3);
-    try stack.push(3);
-    try stack.push(3);
-    try stack.push(3);
-    try stack.push(3);
-    stack.print();
-    n = stack.pop();
-    std.debug.print("\npopped element: {any}", .{n});
-    stack.print();
+    // const u8stack = Stack(u8);
+    const u8stack2 = Stack2(u8);
+    var stack2 = u8stack2.alloc(std.testing.allocator);
+    defer stack2.dealloc();
+    var r = try stack2.push(10);
+    // var r = try stack2.push(-10);
+    std.debug.print("\n{any}\n", .{r});
+    std.debug.print("\n{any}\n", .{stack2.items});
+    // var stack = u8stack.init(std.testing.allocator);
+    //
+    // defer stack.deinit();
+    // stack.print();
+    // var n = stack.pop();
+    // std.debug.print("\npopped element: {any}", .{n});
+    // try stack.push(255);
+    // try stack.push(2);
+    // try stack.push(3);
+    // try stack.push(3);
+    // try stack.push(3);
+    // try stack.push(3);
+    // try stack.push(3);
+    // try stack.push(3);
+    // try stack.push(3);
+    // stack.print();
+    // n = stack.pop();
+    // std.debug.print("\npopped element: {any}", .{n});
+    // stack.print();
 }
