@@ -1,5 +1,4 @@
 const std = @import("std");
-
 /// @fn Tree : Implements Binary search tree
 /// @param T : type
 /// @returns type
